@@ -5,15 +5,8 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // 临时：打印所有headers方便调试
-  console.log('收到请求 headers:', JSON.stringify(req.headers));
-  console.log('环境变量 API_SECRET_KEY:', process.env.API_SECRET_KEY);
-
-  const apiKey = req.headers['x-api-key'] || req.headers['X-Api-Key'] || '';
-  console.log('收到的key:', apiKey);
-
+  const apiKey = req.headers['x-api-key'] || '';
   if (apiKey !== process.env.API_SECRET_KEY) {
-    console.log('鉴权失败，收到:', apiKey, '期望:', process.env.API_SECRET_KEY);
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
@@ -25,11 +18,12 @@ module.exports = async function handler(req, res) {
 
   try {
     const token = await getAccessToken();
-    const nodeId = process.env.DINGTALK_NODE_ID;
+    const workbookId = process.env.DINGTALK_NODE_ID;
     const sheetId = process.env.DINGTALK_SHEET_ID;
+    const operatorId = process.env.DINGTALK_OPERATOR_ID;
 
     const response = await fetch(
-     `https://api.dingtalk.com/v1.0/doc/tables/${nodeId}/sheets/${sheetId}/values`,
+      `https://api.dingtalk.com/v1.0/doc/workbooks/${workbookId}/sheets/${sheetId}/values/append`,
       {
         method: 'POST',
         headers: {
@@ -37,6 +31,7 @@ module.exports = async function handler(req, res) {
           'x-acs-dingtalk-access-token': token,
         },
         body: JSON.stringify({
+          operatorId: operatorId,
           values: [[
             name || '',
             phone || '',
@@ -52,6 +47,7 @@ module.exports = async function handler(req, res) {
     );
 
     const result = await response.json();
+    console.log('钉钉API返回:', JSON.stringify(result));
 
     if (!response.ok) {
       console.error('钉钉 API 错误:', result);

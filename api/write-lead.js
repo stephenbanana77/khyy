@@ -1,3 +1,6 @@
+直接复制替换 GitHub 里的 `write-lead.js`：
+
+```javascript
 const { getAccessToken } = require('../lib/token');
 
 module.exports = async function handler(req, res) {
@@ -20,7 +23,8 @@ module.exports = async function handler(req, res) {
     const token = await getAccessToken();
     const workbookId = process.env.DINGTALK_NODE_ID;
     const sheetId = process.env.DINGTALK_SHEET_ID;
-    const operatorId = process.env.DINGTALK_OPERATOR_ID;
+
+    console.log('开始写入，workbookId:', workbookId, 'sheetId:', sheetId);
 
     const response = await fetch(
       `https://api.dingtalk.com/v1.0/doc/workbooks/${workbookId}/sheets/${sheetId}/values/append`,
@@ -31,7 +35,6 @@ module.exports = async function handler(req, res) {
           'x-acs-dingtalk-access-token': token,
         },
         body: JSON.stringify({
-          operatorId: operatorId,
           values: [[
             name || '',
             phone || '',
@@ -60,3 +63,6 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: err.message });
   }
 };
+```
+
+保存提交后 Vercel 自动部署，等1分钟再去 Dify 测试，把 Vercel Logs 的结果发给我。

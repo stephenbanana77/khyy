@@ -29,7 +29,7 @@ module.exports = async function handler(req, res) {
     const sheetId = process.env.DINGTALK_SHEET_ID;
 
     const response = await fetch(
-      `https://api.dingtalk.com/v1.0/doc/sheets/${sheetId}/values`,
+     `https://api.dingtalk.com/v1.0/doc/tables/${nodeId}/sheets/${sheetId}/values`,
       {
         method: 'POST',
         headers: {
@@ -37,7 +37,6 @@ module.exports = async function handler(req, res) {
           'x-acs-dingtalk-access-token': token,
         },
         body: JSON.stringify({
-          docKey: nodeId,
           values: [[
             name || '',
             phone || '',

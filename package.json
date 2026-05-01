@@ -1,0 +1,12 @@
+{
+  "name": "buildant-dingtalk-service",
+  "version": "1.0.0",
+  "description": "Build Ant Design 钉钉多维表格写入中间服务",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}

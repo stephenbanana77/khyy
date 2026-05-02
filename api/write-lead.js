@@ -1,6 +1,3 @@
-直接复制替换 GitHub 里的 `write-lead.js`：
-
-```javascript
 const { getAccessToken } = require('../lib/token');
 
 module.exports = async function handler(req, res) {
@@ -63,6 +60,3 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: err.message });
   }
 };
-```
-
-保存提交后 Vercel 自动部署，等1分钟再去 Dify 测试，把 Vercel Logs 的结果发给我。
